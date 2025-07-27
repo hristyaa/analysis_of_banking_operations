@@ -17,4 +17,4 @@ def reader_excel_file(file_excel_path):
         return f"Произошла ошибка: {ex}."
 
 
-print(reader_excel_file("../data/operations.xlsx"))
+# print(reader_excel_file("../data/operations.xlsx"))
