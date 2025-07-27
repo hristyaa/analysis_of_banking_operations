@@ -94,3 +94,9 @@ def test_reader_excel_file_file_not_found():
     """Тест, если файл не найден"""
     result = reader_excel_file("file_non_existent.xlsx")
     assert result == "Файл не найден."
+
+
+def test_reader_excel_file_file_invalid_file_format(txt_file):
+    """Тест, если файл с неправильным форматом"""
+    result = reader_excel_file(txt_file)
+    assert result == "Файл пустой или имеет неподдерживаемый формат."
