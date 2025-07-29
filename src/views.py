@@ -1,12 +1,15 @@
 import json
 import requests
+import os
 import pandas as pd
 from datetime import datetime
 from src.reader import reader_excel_file
+from dotenv import load_dotenv
 
+load_dotenv()
 
-def home_page():
-    pass
+API_KEY = os.getenv("API_KEY")
+SECRET_API_KEY = os.getenv("SECRET_API_KEY")
 
 
 def greeting():
@@ -105,12 +108,80 @@ def get_top_list_transction(operations, start_date, end_date):
 
 
 def get_currency_rates():
-    pass
+    """Функция возвращает курс валют"""
+    try:
+        if not API_KEY:
+            raise ValueError("API_KEY не задан!")
+
+        url = f"https://v6.exchangerate-api.com/v6/{API_KEY}/latest/RUB"
+        response = requests.get(url)
+
+        if response.status_code != 200:
+            raise ValueError(f"Ошибка запроса: {response.status_code}")
+
+        data = response.json()
+
+        if data.get("conversion_rates") is None:
+            raise KeyError("Ключ 'conversion_rates' отсутствует в ответе API")
+
+        file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "user_settings.json"))
+        with open(file_path, "r", encoding="utf-8") as file:
+            user_settings = json.load(file)
+            user_currencies = user_settings["user_currencies"]
+
+        currency_list = []
+        for currency in user_currencies:
+            try:
+                rate = data["conversion_rates"][currency]
+                dict_currency = {}
+                dict_currency["currency"] = currency
+                dict_currency["rate"] = round(1 / rate, 2)
+                currency_list.append(dict_currency)
+            except KeyError:
+                continue
+
+        return currency_list
+
+    except ValueError as ve:
+        raise ve
+
+    except Exception as ex:
+        return f"Произошла ошибка {ex}"
 
 
 def get_stock_prices():
-    pass
+    """Функция стоимость акций из S&P500"""
 
+    file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "user_settings.json"))
+    with open(file_path, "r", encoding="utf-8") as file:
+        user_settings = json.load(file)
+        user_stocks = user_settings["user_stocks"]
+
+    stocks_list = []
+
+    for stock in user_stocks:
+        try:
+            url = f"https://api.twelvedata.com/price?symbol={stock}&apikey={SECRET_API_KEY}"
+            response = requests.get(url)
+
+            if response.status_code != 200:
+                print(f"Ошибка запроса для {stock}: {response.status_code}")
+                continue
+
+            data = response.json()
+            dict_stock = {}
+            if data.get("price"):
+                dict_stock["stock"] = stock
+                dict_stock["price"] = round(float(data.get("price")), 2)
+                stocks_list.append(dict_stock)
+            else:
+                print(f"{stock}: не удалось получить цену")
+                continue
+
+        except Exception as ex:
+            print(f"Произошла ошибка {ex} при получении данных {stock}")
+
+    return stocks_list
 
 
 def home_page(operations, date):
@@ -131,14 +202,18 @@ def home_page(operations, date):
     start_date, end_date = get_start_and_end_date(date)
     dict_home_page["cards"] = get_data_of_cards(operations, start_date, end_date)
     dict_home_page["top_transactions"] = get_top_list_transction(operations, start_date, end_date)
+    dict_home_page["currency_rates"] = get_currency_rates()
+    dict_home_page["stock_prices"] = get_stock_prices()
 
     return json.dumps(dict_home_page, ensure_ascii=False, indent=4)
 
 
-data = reader_excel_file("../data/operations.xlsx")
-date = "2018-03-05 12:00:00"
-# print(greeting())
-start_date, end_date = get_start_and_end_date("2018-03-05 12:00:00")
-# print(get_data_of_cards(data, start_date, end_date))
-print(get_top_list_transction(data, start_date, end_date))
+# data = reader_excel_file("../data/operations.xlsx")
+# date = "2018-03-05 12:00:00"
+# # # # # print(greeting())
+# # # # start_date, end_date = get_start_and_end_date("2018-03-05 12:00:00")
+# # # # # print(get_data_of_cards(data, start_date, end_date))
+# # # # # print(get_top_list_transction(data, start_date, end_date))
 # print(home_page(data, date))
+# # print(get_currency_rates())
+print(get_stock_prices())

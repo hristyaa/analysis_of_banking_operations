@@ -8,7 +8,7 @@ from src.reader import reader_excel_file
 def get_analysis_categories_of_increased_cashback(data, year, month):
     """Функция анализирует выгодность категории повышенного кешбэка"""
     cashback = {}
-    flag = 0     #  флаг для определения нахождения операций по введенным данным
+    flag = 0  #  флаг для определения нахождения операций по введенным данным
     try:
         for operation in data:
             date_string = operation["Дата операции"]
@@ -38,7 +38,7 @@ def investment_bank(month, operations, limit):
     if limit not in [10, 50, 100]:
         raise ValueError("Limit должен быть 10, 50 или 100")
     try:
-        date = month.split('-')
+        date = month.split("-")
         if len(date[0]) == 4 and len(date[1]) == 2:
             investment_amount = 0
             flag = 0
@@ -48,7 +48,7 @@ def investment_bank(month, operations, limit):
                 if date_operation.year == int(date[0]) and date_operation.month == int(date[1]):
                     flag += 1
                     if operation["Сумма платежа"] < 0:
-                        round_amount = math.ceil(-operation["Сумма платежа"]/ limit) * limit
+                        round_amount = math.ceil(-operation["Сумма платежа"] / limit) * limit
                         deferred_amount = round_amount + operation["Сумма платежа"]
                         investment_amount += deferred_amount
             if flag == 0:
@@ -58,7 +58,7 @@ def investment_bank(month, operations, limit):
         else:
             return f"Введенные данные: {month} - неверны"
     except Exception as ex:
-        return f'Произошла ошибка {ex}'
+        return f"Произошла ошибка {ex}"
 
 
 # data = reader_excel_file("../data/operations.xlsx")

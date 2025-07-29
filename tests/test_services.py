@@ -27,9 +27,9 @@ def test_get_analysis_categories_incorrect_params(operations):
     assert result == "Произошла ошибка invalid literal for int() with base 10: '2hg018424'"
 
 
-@pytest.mark.parametrize("month, limit, expected", [("2018-03", 10, 16.9),
-                                                    ("2018-03", 50, 106.9),
-                                                    ("2018-03", 100, 206.9)])
+@pytest.mark.parametrize(
+    "month, limit, expected", [("2018-03", 10, 16.9), ("2018-03", 50, 106.9), ("2018-03", 100, 206.9)]
+)
 def test_investment_bank(month, operations, limit, expected):
     """Тест функции при верно заданных параметрах"""
     result = investment_bank(month, operations, limit)

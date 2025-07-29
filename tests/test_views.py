@@ -1,7 +1,14 @@
 import pytest
 from datetime import datetime
-from unittest.mock import patch
-from src.views import greeting, get_start_and_end_date, get_data_of_cards, get_top_list_transction
+from unittest.mock import Mock, patch
+from src.views import (
+    greeting,
+    get_start_and_end_date,
+    get_data_of_cards,
+    get_top_list_transction,
+    get_currency_rates,
+    get_stock_prices,
+)
 
 
 @pytest.mark.parametrize(
@@ -97,3 +104,34 @@ def test_get_data_of_cards(operations, start_date, end_date, excepted):
 def test_get_top_list_transction(operations, start_date, end_date, excepted):
     """Тест на обработку функции при заданных параметрах"""
     assert get_top_list_transction(operations, start_date, end_date) == excepted
+
+
+def test_get_currency_rates():
+    """Тест на работу функции"""
+    test_data = {"conversion_rates": {"USD": 0.0124, "EUR": 0.0107}}
+
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = test_data
+
+    with patch("requests.get", return_value=mock_response):
+        result = get_currency_rates()
+
+        assert result[0]["currency"] == "USD"
+        assert result[0]["rate"] == round(1 / 0.0124, 2)
+        assert result[1]["currency"] == "EUR"
+        assert result[1]["rate"] == round(1 / 0.0107, 2)
+
+
+def test_get_currency_rates_api_error():
+    """Тест обработки ошибки API"""
+    mock_response = Mock()
+    mock_response.status_code = 500
+    with pytest.raises(ValueError):
+        with patch("requests.get", return_value=mock_response):
+            get_currency_rates()
+
+
+def test_get_stock_prices():
+    """Тест на работу функции"""
+    pass
