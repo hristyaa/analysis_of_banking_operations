@@ -1,5 +1,6 @@
 import json
 import math
+
 from _datetime import datetime
 
 from src.reader import reader_excel_file
@@ -8,7 +9,7 @@ from src.reader import reader_excel_file
 def get_analysis_categories_of_increased_cashback(data, year, month):
     """Функция анализирует выгодность категории повышенного кешбэка"""
     cashback = {}
-    flag = 0  #  флаг для определения нахождения операций по введенным данным
+    flag = 0  # флаг для определения нахождения операций по введенным данным
     try:
         for operation in data:
             date_string = operation["Дата операции"]

@@ -1,10 +1,12 @@
 import json
-import requests
 import os
-import pandas as pd
 from datetime import datetime
-from src.reader import reader_excel_file
+
+import pandas as pd
+import requests
 from dotenv import load_dotenv
+
+from src.reader import reader_excel_file
 
 load_dotenv()
 
@@ -169,6 +171,7 @@ def get_stock_prices():
                 continue
 
             data = response.json()
+            print(data)
             dict_stock = {}
             if data.get("price"):
                 dict_stock["stock"] = stock

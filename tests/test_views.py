@@ -1,14 +1,10 @@
-import pytest
 from datetime import datetime
 from unittest.mock import Mock, patch
-from src.views import (
-    greeting,
-    get_start_and_end_date,
-    get_data_of_cards,
-    get_top_list_transction,
-    get_currency_rates,
-    get_stock_prices,
-)
+
+import pytest
+
+from src.views import (get_currency_rates, get_data_of_cards, get_start_and_end_date, get_stock_prices,
+                       get_top_list_transction, greeting)
 
 
 @pytest.mark.parametrize(
@@ -134,4 +130,37 @@ def test_get_currency_rates_api_error():
 
 def test_get_stock_prices():
     """Тест на работу функции"""
-    pass
+    test_data = {'price': '211.27000'}
+
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = test_data
+
+    with patch("requests.get", return_value=mock_response):
+        result = get_stock_prices()
+
+        assert result[0]["stock"] == "AAPL"
+        assert result[0]['price'] == 211.27
+
+
+def test_get_stock_prices_api_error():
+    """Тест обработки ошибки API"""
+    mock_response = Mock()
+    mock_response.status_code = 500
+
+    with patch("requests.get", return_value=mock_response):
+        result = get_stock_prices()
+        assert result == []
+
+
+def test_get_stock_prices_no_key():
+    """Тест на отсутствие price"""
+    test_data = {'pricecc': '211.27000'}
+
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = test_data
+
+    with patch("requests.get", return_value=mock_response):
+        result = get_stock_prices()
+        assert result == []

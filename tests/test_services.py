@@ -1,5 +1,7 @@
 import json
+
 import pytest
+
 from src.services import get_analysis_categories_of_increased_cashback, investment_bank
 
 
