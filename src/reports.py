@@ -4,12 +4,12 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from functools import wraps
 import json
-from src.reader import reader_excel_file
+from src.utils import reader_excel_file
 
 
 def save_to_file(filename='report.json'):
     """
-    Функция записывает данные отчета в файл с названием по умолчанию 'report.json' или
+    Декоратор записывает данные отчета в файл с названием по умолчанию 'report.json' или
     в заданный файл в директорию reports
     """
 
@@ -76,6 +76,6 @@ def spending_by_category(transactions, category, date=None):
 
 
 
-transactions = pd.DataFrame(reader_excel_file("../data/operations.xlsx"))
-# print(spending_by_category(transactions, 'Супермаркеты', date='21.05.2018'))
-print(spending_by_category(transactions, 'Супермаркеты', date=None))
+# transactions = pd.DataFrame(reader_excel_file("../data/operations.xlsx"))
+# # print(spending_by_category(transactions, 'Супермаркеты', date='21.05.2018'))
+# print(spending_by_category(transactions, 'Супермаркеты', date=None))

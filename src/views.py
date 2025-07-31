@@ -6,36 +6,13 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-from src.reader import reader_excel_file
+
+from src.utils import reader_excel_file, greeting, get_start_and_end_date
 
 load_dotenv()
 
 API_KEY = os.getenv("API_KEY")
 SECRET_API_KEY = os.getenv("SECRET_API_KEY")
-
-
-def greeting():
-    """Функция приветствия в зависимости от текущего времени"""
-    current_date_time = datetime.now()
-    if 6 <= current_date_time.hour <= 11:
-        return "Доброе утро!"
-    elif 12 <= current_date_time.hour <= 17:
-        return "Добрый день!"
-    elif 18 <= current_date_time.hour <= 23:
-        return "Добрый вечер!"
-    elif 0 <= current_date_time.hour < 5:
-        return "Доброй ночи!"
-
-
-def get_start_and_end_date(date):
-    """Функция, которая определяет диапазон дат для анализа"""
-    try:
-        date_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-        start_date = date_obj.replace(day=1, hour=0, minute=0, second=0)
-        end_date = date_obj
-        return start_date, end_date
-    except Exception as ex:
-        return f"Произошла ошибка {ex}"
 
 
 def get_data_of_cards(operations, start_date, end_date):
@@ -171,7 +148,7 @@ def get_stock_prices():
                 continue
 
             data = response.json()
-            print(data)
+
             dict_stock = {}
             if data.get("price"):
                 dict_stock["stock"] = stock
@@ -213,10 +190,10 @@ def home_page(operations, date):
 
 # data = reader_excel_file("../data/operations.xlsx")
 # date = "2018-03-05 12:00:00"
-# # # # # print(greeting())
-# # # # start_date, end_date = get_start_and_end_date("2018-03-05 12:00:00")
-# # # # # print(get_data_of_cards(data, start_date, end_date))
-# # # # # print(get_top_list_transction(data, start_date, end_date))
+# print(greeting())
+# start_date, end_date = get_start_and_end_date("2018-03-05 12:00:00")
+# print(get_data_of_cards(data, start_date, end_date))
+# print(get_top_list_transction(data, start_date, end_date))
 # print(home_page(data, date))
-# # print(get_currency_rates())
-print(get_stock_prices())
+# print(get_currency_rates())
+# print(get_stock_prices())

@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+import json
 
 
 @pytest.fixture()
@@ -109,3 +110,18 @@ def operations():
         },
     ]
 
+
+@pytest.fixture()
+def dataframe():
+    return pd.DataFrame([{'Yes': 'test', 'No': '131'}])
+
+
+@pytest.fixture()
+def dataframe_empty(dataframe):
+    return pd.DataFrame()
+
+
+@pytest.fixture()
+def dataframe_operations(operations):
+    df = pd.DataFrame(operations)
+    return df
