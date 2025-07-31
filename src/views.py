@@ -6,8 +6,7 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-
-from src.utils import reader_excel_file, greeting, get_start_and_end_date
+from src.utils import get_start_and_end_date, greeting, reader_excel_file
 
 load_dotenv()
 
