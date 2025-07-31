@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from src.utils import reader_excel_file, greeting, get_start_and_end_date
+from src.utils import get_start_and_end_date, greeting, reader_excel_file
 
 
 @patch("src.utils.pd.read_excel")
@@ -132,4 +132,3 @@ def test_get_start_and_end_date_error():
     """Тест на обработку функции при неправильном формате даты"""
     result = get_start_and_end_date("03-05-2018 08:10:15")
     assert result == "Произошла ошибка time data '03-05-2018 08:10:15' does not match format '%Y-%m-%d %H:%M:%S'"
-

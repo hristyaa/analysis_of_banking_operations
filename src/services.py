@@ -1,11 +1,11 @@
-import logging
-import os
 import json
+import logging
 import math
+import os
 
 from _datetime import datetime
 
-from src.utils import reader_excel_file
+# from src.utils import reader_excel_file
 
 services_logger = logging.getLogger("app.services")
 
@@ -19,6 +19,7 @@ file_handler.setFormatter(file_formatter)
 
 services_logger.addHandler(file_handler)
 services_logger.setLevel(logging.DEBUG)
+
 
 def get_analysis_categories_of_increased_cashback(data, year, month):
     """Функция анализирует выгодность категории повышенного кешбэка"""
@@ -77,7 +78,8 @@ def investment_bank(month, operations, limit):
             if flag == 0:
                 services_logger.info("За введенный месяц данных нет")
                 return f"За {month} нет данных"
-            # return f"""За {month} при округлении ваших трат до {limit} руб. удалось бы отложить на "Инвесткопилку": {round(investment_amount, 2)} руб."""
+            # return f"""За {month} при округлении ваших трат до {limit} руб. удалось бы отложить на "Инвесткопилку":
+            # {round(investment_amount, 2)} руб."""
             services_logger.info("Сумма успешно рассчитана»")
             return round(investment_amount, 2)
         else:

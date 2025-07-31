@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 
 from src.utils import get_start_and_end_date, greeting, reader_excel_file
 
-
 views_logger = logging.getLogger("app.views")
 
 log_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "logs"))
@@ -135,12 +134,12 @@ def get_currency_rates():
         file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "user_settings.json"))
 
         with open(file_path, "r", encoding="utf-8") as file:
-            views_logger.info(f"Открытие файла пользовательских настроек user_settings.json")
+            views_logger.info("Открытие файла пользовательских настроек user_settings.json")
             user_settings = json.load(file)
             user_currencies = user_settings["user_currencies"]
 
         currency_list = []
-        views_logger.info(f"Формирование листа курса валют")
+        views_logger.info("Формирование листа курса валют")
         for currency in user_currencies:
             try:
                 rate = data["conversion_rates"][currency]
@@ -151,7 +150,7 @@ def get_currency_rates():
             except KeyError:
                 views_logger.error(f"Ошибка при получении курса для валюты: {currency}")
                 continue
-        views_logger.info(f"Лист курса валют сформирован")
+        views_logger.info("Лист курса валют сформирован")
         return currency_list
 
     except ValueError as ve:
@@ -167,7 +166,7 @@ def get_stock_prices():
     """Функция стоимость акций из S&P500"""
     file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "user_settings.json"))
 
-    views_logger.info(f"Открытие файла пользовательских настроек user_settings.json")
+    views_logger.info("Открытие файла пользовательских настроек user_settings.json")
 
     with open(file_path, "r", encoding="utf-8") as file:
         user_settings = json.load(file)
@@ -203,7 +202,7 @@ def get_stock_prices():
         except Exception as ex:
             views_logger.error(f"Произошла ошибка при получении данных {stock}")
             print(f"Произошла ошибка {ex} при получении данных {stock}")
-    views_logger.info(f"Вывод полученных стоимостей акций из S&P500")
+    views_logger.info("Вывод полученных стоимостей акций из S&P500")
     return stocks_list
 
 
@@ -227,7 +226,7 @@ def home_page(operations, date):
     dict_home_page["top_transactions"] = get_top_list_transction(operations, start_date, end_date)
     dict_home_page["currency_rates"] = get_currency_rates()
     dict_home_page["stock_prices"] = get_stock_prices()
-    views_logger.info(f"Cтраница 'Главная' успешно реализована")
+    views_logger.info("Cтраница 'Главная' успешно реализована")
     return json.dumps(dict_home_page, ensure_ascii=False, indent=4)
 
 

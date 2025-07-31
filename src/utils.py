@@ -17,6 +17,7 @@ file_handler.setFormatter(file_formatter)
 utils_logger.addHandler(file_handler)
 utils_logger.setLevel(logging.DEBUG)
 
+
 def reader_excel_file(file_excel_path):
     """Функция считывает данные из Excel и выдает список словарей с банковскими операциями."""
     try:

@@ -3,8 +3,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from src.views import (get_currency_rates, get_data_of_cards, get_stock_prices,
-                       get_top_list_transction)
+from src.views import get_currency_rates, get_data_of_cards, get_stock_prices, get_top_list_transction
 
 
 @pytest.mark.parametrize(
@@ -101,7 +100,7 @@ def test_get_currency_rates_api_error():
 
 def test_get_stock_prices():
     """Тест на работу функции"""
-    test_data = {'price': '211.27000'}
+    test_data = {"price": "211.27000"}
 
     mock_response = Mock()
     mock_response.status_code = 200
@@ -111,7 +110,7 @@ def test_get_stock_prices():
         result = get_stock_prices()
 
         assert result[0]["stock"] == "AAPL"
-        assert result[0]['price'] == 211.27
+        assert result[0]["price"] == 211.27
 
 
 def test_get_stock_prices_api_error():
@@ -126,7 +125,7 @@ def test_get_stock_prices_api_error():
 
 def test_get_stock_prices_no_key():
     """Тест на отсутствие price"""
-    test_data = {'pricecc': '211.27000'}
+    test_data = {"pricecc": "211.27000"}
 
     mock_response = Mock()
     mock_response.status_code = 200
