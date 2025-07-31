@@ -7,7 +7,7 @@ from _datetime import datetime
 
 from src.utils import reader_excel_file
 
-utils_logger = logging.getLogger("app.services")
+services_logger = logging.getLogger("app.services")
 
 log_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "logs"))
 os.makedirs(log_dir, exist_ok=True)
@@ -17,15 +17,15 @@ file_handler = logging.FileHandler(filename=os.path.join(log_dir, "services.log"
 file_formatter = logging.Formatter("%(asctime)s - %(filename)s - %(levelname)s - %(message)s")
 file_handler.setFormatter(file_formatter)
 
-utils_logger.addHandler(file_handler)
-utils_logger.setLevel(logging.DEBUG)
+services_logger.addHandler(file_handler)
+services_logger.setLevel(logging.DEBUG)
 
 def get_analysis_categories_of_increased_cashback(data, year, month):
     """Функция анализирует выгодность категории повышенного кешбэка"""
     cashback = {}
     flag = 0  # флаг для определения нахождения операций по введенным данным
     try:
-        utils_logger.info("Попытка нахождения операций по введенным параметрам")
+        services_logger.info("Попытка нахождения операций по введенным параметрам")
         for operation in data:
             date_string = operation["Дата операции"]
             date_operation = datetime.strptime(date_string, "%d.%m.%Y %H:%M:%S")
@@ -40,29 +40,29 @@ def get_analysis_categories_of_increased_cashback(data, year, month):
                         new_cash = cashback.get(category) + cash
                         cashback[category] = int(new_cash)
         if flag > 0 and cashback == {}:
-            utils_logger.info("По введенным параметрам кэшбек не найден")
+            services_logger.info("По введенным параметрам кэшбек не найден")
             return f"По введенным параметрам ({year} год, {month} месяц) кэшбэк не найден"
         elif flag > 0:
-            utils_logger.info("Данные по введенным параметрам найдены, выведены в консоль в формате json")
+            services_logger.info("Данные по введенным параметрам найдены, выведены в консоль в формате json")
             return json.dumps(cashback, ensure_ascii=False, indent=4)
         elif flag == 0:
-            utils_logger.info("По введенным параметрам данных нет")
+            services_logger.info("По введенным параметрам данных нет")
             return f"По введенным параметрам ({year} год, {month} месяц) нет данных"
     except Exception as ex:
-        utils_logger.error("Произошла ошибка")
+        services_logger.error("Произошла ошибка")
         return f"Произошла ошибка {ex}"
 
 
 def investment_bank(month, operations, limit):
     """Функция возвращает сумму, которую удалось бы отложить в «Инвесткопилку»"""
     if limit not in [10, 50, 100]:
-        utils_logger.error("Limit неверный")
+        services_logger.error("Limit неверный")
         raise ValueError("Limit должен быть 10, 50 или 100")
     try:
         date = month.split("-")
 
         if len(date[0]) == 4 and len(date[1]) == 2:
-            utils_logger.info("Попытка расчета суммы, которую удалось бы отложить в «Инвесткопилку»")
+            services_logger.info("Попытка расчета суммы, которую удалось бы отложить в «Инвесткопилку»")
             investment_amount = 0
             flag = 0
             for operation in operations:
@@ -75,16 +75,16 @@ def investment_bank(month, operations, limit):
                         deferred_amount = round_amount + operation["Сумма платежа"]
                         investment_amount += deferred_amount
             if flag == 0:
-                utils_logger.info("За введенный месяц данных нет")
+                services_logger.info("За введенный месяц данных нет")
                 return f"За {month} нет данных"
             # return f"""За {month} при округлении ваших трат до {limit} руб. удалось бы отложить на "Инвесткопилку": {round(investment_amount, 2)} руб."""
-            utils_logger.info("Сумма успешно рассчитана»")
+            services_logger.info("Сумма успешно рассчитана»")
             return round(investment_amount, 2)
         else:
-            utils_logger.info("Введенные данные месяца неверны")
+            services_logger.info("Введенные данные месяца неверны")
             return f"Введенные данные: {month} - неверны"
     except Exception as ex:
-        utils_logger.error("Произошла ошибка")
+        services_logger.error("Произошла ошибка")
         return f"Произошла ошибка {ex}"
 
 
