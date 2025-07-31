@@ -20,7 +20,7 @@ def test_get_analysis_categories_no_data(operations):
 def test_get_analysis_categories_no_cashback(operations):
     """Тестирование на анализ категории кэшбека при отсутствиии кэшбэка"""
     result = get_analysis_categories_of_increased_cashback(operations, "2018", "2")
-    assert result == "По введенным параметрам (2018 год, 2 месяц) кэшбэка не было"
+    assert result == "По введенным параметрам (2018 год, 2 месяц) кэшбэк не найден"
 
 
 def test_get_analysis_categories_incorrect_params(operations):
