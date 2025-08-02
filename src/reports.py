@@ -1,11 +1,11 @@
 import json
+import logging
 import os
 from datetime import datetime
 from functools import wraps
-import logging
+
 import pandas as pd
 from dateutil.relativedelta import relativedelta
-
 
 reports_logger = logging.getLogger("app.views")
 
@@ -20,6 +20,7 @@ file_handler.setFormatter(file_formatter)
 reports_logger.addHandler(file_handler)
 reports_logger.setLevel(logging.DEBUG)
 
+
 def save_to_file(filename="report.json", enabled=False):
     """
     Декоратор записывает данные отчета в файл с названием по умолчанию 'report.json' или
@@ -31,7 +32,10 @@ def save_to_file(filename="report.json", enabled=False):
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
 
-            if type(result) == str:
+            if not enabled:
+                return result
+
+            if type(result) is str:
                 return result
 
             if result.empty:

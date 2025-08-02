@@ -1,11 +1,11 @@
 from src.reports import save_to_file, spending_by_category
-
+import pandas as pd
 
 def test_decorator_save_to_file(dataframe, tmp_path):
     """Проверка декоратора на сохранение результата функции в файл"""
     test_file = tmp_path / "test_report.json"
 
-    @save_to_file(filename=str(test_file))
+    @save_to_file(filename=str(test_file), enabled=True)
     def test_func(df):
         return df
 
@@ -24,7 +24,7 @@ def test_decorator_save_to_file(dataframe, tmp_path):
 def test_decorator_save_to_file_empty(dataframe_empty):
     """Проверка декоратора при пустом датафрейме"""
 
-    @save_to_file()
+    @save_to_file(enabled=True)
     def test_func(df):
         return df
 
@@ -36,4 +36,7 @@ def test_decorator_save_to_file_empty(dataframe_empty):
 
 def test_spending_by_category(dataframe_operations):
     result = spending_by_category(dataframe_operations, "Elis")
-    assert "нет данных" in result or "Произошла ошибка" in result
+    if type(result) is str:
+        assert "нет данных" in result or "Произошла ошибка" in result
+    elif type(result) is pd.DataFrame:
+        assert result.empty

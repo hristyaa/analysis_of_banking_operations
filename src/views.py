@@ -7,7 +7,7 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-from src.utils import get_start_and_end_date, greeting, reader_excel_file
+from src.utils import get_start_and_end_date, greeting
 
 views_logger = logging.getLogger("app.views")
 
@@ -172,7 +172,7 @@ def get_currency_rates():
 
 
 def get_stock_prices():
-    """Функция стоимость акций из S&P500"""
+    """Функция возвращает стоимость акций из S&P500"""
     file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "user_settings.json"))
 
     views_logger.info("Открытие файла пользовательских настроек user_settings.json")
@@ -237,6 +237,7 @@ def home_page(operations, date):
     dict_home_page["stock_prices"] = get_stock_prices()
     views_logger.info("Cтраница 'Главная' успешно реализована")
     return json.dumps(dict_home_page, ensure_ascii=False, indent=4)
+
 
 #
 # data = reader_excel_file("../data/operations.xlsx")
