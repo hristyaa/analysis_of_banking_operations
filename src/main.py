@@ -198,5 +198,3 @@ if __name__ == "__main__":
                 print("Пункт введен неккоректно")
         except Exception as ex:
             print(f"Произошла ошибка {ex}")
-
-

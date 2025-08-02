@@ -1,5 +1,7 @@
-from src.reports import save_to_file, spending_by_category
 import pandas as pd
+
+from src.reports import save_to_file, spending_by_category
+
 
 def test_decorator_save_to_file(dataframe, tmp_path):
     """Проверка декоратора на сохранение результата функции в файл"""
