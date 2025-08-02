@@ -3,15 +3,17 @@ import pytest
 
 
 @pytest.fixture()
-def excel_empty_file():
+def excel_empty_file(tmp_path):
     """Excel-файл пустой"""
-    return pd.DataFrame().to_excel("empty_file.xlsx", index=False)
+    file_path = tmp_path / "empty_file.xlsx"
+    return pd.DataFrame().to_excel(file_path, index=False)
 
 
 @pytest.fixture()
-def txt_file():
+def txt_file(tmp_path):
     """Файл формата txt"""
-    with open("test_file.txt", "w", encoding="utf-8") as file:
+    file_path = tmp_path / "test_file.txt"
+    with open(file_path, "w", encoding="utf-8") as file:
         file.write("")
     return "test_file.txt"
 

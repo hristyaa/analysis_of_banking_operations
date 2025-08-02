@@ -73,4 +73,4 @@ def get_start_and_end_date(date):
 
 # print(reader_excel_file("../data/operations.xlsx"))
 # print(greeting())
-# print(get_start_and_end_date('200801.01 14:21:23'))
+# print(get_start_and_end_date('2008-01-01 14:21:23'))

@@ -38,35 +38,44 @@ def get_data_of_cards(operations, start_date, end_date):
     try:
         views_logger.info("Попытка нахождения операций по введенным параметрам")
         for operation in operations:
-            date_string = operation["Дата операции"]
+            date_string = operation.get("Дата операции")
+
             date_operation = datetime.strptime(date_string, "%d.%m.%Y %H:%M:%S")
             if start_date <= date_operation <= end_date:
                 flag_date += 1
-                if operation["Сумма платежа"] < 0:
+                if operation.get("Сумма платежа") < 0:
                     flag_total += 1
                     dict_card = {}
-                    number_card = operation["Номер карты"][-4:]
-                    amount = operation["Сумма платежа"]
-                    cashback = int(amount / 100)
-                    if number_card in numbers_cards:
-                        for card in list_data_of_cards:
-                            if card.get("last_digits") == number_card:
-                                card["total_spent"] += -amount
-                                card["cashback"] += -cashback
+                    if not operation.get("Номер карты") or str(operation.get("Номер карты")).lower() == "nan":
+                        views_logger.warning(f"Пропущена операция без корректного номера карты: {operation}")
+                        continue
                     else:
-                        numbers_cards.append(number_card)
-                        dict_card["last_digits"] = number_card
-                        dict_card["total_spent"] = -amount
-                        dict_card["cashback"] = -cashback
-                        list_data_of_cards.append(dict_card)
+                        number_card = operation.get("Номер карты")[-4:]
+
+                        amount = operation.get("Сумма платежа")
+                        cashback = float(amount / 100)
+                        if number_card in numbers_cards:
+                            for card in list_data_of_cards:
+                                if card.get("last_digits") == number_card:
+                                    card["total_spent"] += -amount
+                                    card["cashback"] += -cashback
+                        else:
+                            numbers_cards.append(number_card)
+                            dict_card["last_digits"] = number_card
+                            dict_card["total_spent"] = -amount
+                            dict_card["cashback"] = -cashback
+                            list_data_of_cards.append(dict_card)
 
         if flag_date == 0:
-            views_logger.info("Данных об операциях в заданном диапазоне нет")
+            views_logger.warning("Данных об операциях в заданном диапазоне нет")
             return "Данных об операциях в заданном диапазоне нет"
         if flag_total == 0:
-            views_logger.info("Данных в заданном диапазоне по расходам нет")
+            views_logger.warning("Данных в заданном диапазоне по расходам нет")
             return "Данных в заданном диапазоне по расходам нет"
         views_logger.info("Получен список словарей с данными по каждой карте в заданном периоде")
+        for card in list_data_of_cards:
+            card["total_spent"] = round(card["total_spent"], 2)
+            card["cashback"] = round(card["cashback"], 2)
         return list_data_of_cards
     except Exception as ex:
         views_logger.error("Произошла ошибка")
@@ -99,7 +108,7 @@ def get_top_list_transction(operations, start_date, end_date):
         df = pd.DataFrame.from_dict(dict_transactions)
         top_transactions = df.sort_values(by="amount", ascending=True).head()
         if flag_date == 0:
-            views_logger.info("Данных об операциях в заданном диапазоне нет")
+            views_logger.warning("Данных об операциях в заданном диапазоне нет")
             return "Данных об операциях в заданном диапазоне нет"
         # list_transactions.append(dict_card)
         views_logger.info("Лист словарей 'Топ-5 транзакций по сумме платежа' сформирован")
@@ -195,7 +204,7 @@ def get_stock_prices():
                 views_logger.info(f"Стоимость для {stock} получена")
                 stocks_list.append(dict_stock)
             else:
-                views_logger.error(f"Стоимость для {stock} не удалось получить")
+                views_logger.warning(f"Стоимость для {stock} не удалось получить")
                 print(f"{stock}: не удалось получить цену")
                 continue
 
@@ -229,13 +238,13 @@ def home_page(operations, date):
     views_logger.info("Cтраница 'Главная' успешно реализована")
     return json.dumps(dict_home_page, ensure_ascii=False, indent=4)
 
-
-data = reader_excel_file("../data/operations.xlsx")
-date = "2018-03-05 12:00:00"
-# print(greeting())
-# start_date, end_date = get_start_and_end_date("2018-03-05 12:00:00")
+#
+# data = reader_excel_file("../data/operations.xlsx")
+# date = "2018-03-15 12:00:00"
+# # # # print(greeting())
+# start_date, end_date = get_start_and_end_date("2018-03-15 12:00:00")
 # print(get_data_of_cards(data, start_date, end_date))
-# print(get_top_list_transction(data, start_date, end_date))
-print(home_page(data, date))
+# # # print(get_top_list_transction(data, start_date, end_date))
+# print(home_page(data, date))
 # print(get_currency_rates())
 # print(get_stock_prices())

@@ -41,13 +41,13 @@ def get_analysis_categories_of_increased_cashback(data, year, month):
                         new_cash = cashback.get(category) + cash
                         cashback[category] = int(new_cash)
         if flag > 0 and cashback == {}:
-            services_logger.info("По введенным параметрам кэшбек не найден")
+            services_logger.warning("По введенным параметрам кэшбек не найден")
             return f"По введенным параметрам ({year} год, {month} месяц) кэшбэк не найден"
         elif flag > 0:
             services_logger.info("Данные по введенным параметрам найдены, выведены в консоль в формате json")
             return json.dumps(cashback, ensure_ascii=False, indent=4)
         elif flag == 0:
-            services_logger.info("По введенным параметрам данных нет")
+            services_logger.warning("По введенным параметрам данных нет")
             return f"По введенным параметрам ({year} год, {month} месяц) нет данных"
     except Exception as ex:
         services_logger.error("Произошла ошибка")
@@ -76,14 +76,14 @@ def investment_bank(month, operations, limit):
                         deferred_amount = round_amount + operation["Сумма платежа"]
                         investment_amount += deferred_amount
             if flag == 0:
-                services_logger.info("За введенный месяц данных нет")
+                services_logger.warning("За введенный месяц данных нет")
                 return f"За {month} нет данных"
             # return f"""За {month} при округлении ваших трат до {limit} руб. удалось бы отложить на "Инвесткопилку":
             # {round(investment_amount, 2)} руб."""
             services_logger.info("Сумма успешно рассчитана»")
             return round(investment_amount, 2)
         else:
-            services_logger.info("Введенные данные месяца неверны")
+            services_logger.warning("Введенные данные месяца неверны")
             return f"Введенные данные: {month} - неверны"
     except Exception as ex:
         services_logger.error("Произошла ошибка")

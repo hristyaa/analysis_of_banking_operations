@@ -13,8 +13,8 @@ from src.views import get_currency_rates, get_data_of_cards, get_stock_prices, g
             datetime(2018, 3, 1, 0, 0, 0),
             datetime(2018, 3, 22, 15, 0, 0),
             [
-                {"last_digits": "7197", "total_spent": 310, "cashback": 3},
-                {"last_digits": "4556", "total_spent": 300, "cashback": 3},
+                {"last_digits": "7197", "total_spent": 310.0, "cashback": 3.1},
+                {"last_digits": "4556", "total_spent": 300.0, "cashback": 3.0},
             ],
         ),
         (
